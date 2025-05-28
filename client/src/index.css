@@ -63,12 +63,27 @@
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased bg-background text-foreground transition-colors duration-300;
     font-family: 'Inter', system-ui, sans-serif;
   }
 
   html {
     scroll-behavior: smooth;
+  }
+
+  /* Melhor contraste e legibilidade */
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-foreground font-semibold;
+  }
+
+  /* Melhor acessibilidade para foco */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+
+  /* Estilos para elementos interativos */
+  button, a, [role="button"] {
+    @apply transition-all duration-200 ease-in-out;
   }
 }
 
@@ -78,7 +93,7 @@
   }
 }
 
-/* Custom animations */
+/* Animações personalizadas aprimoradas */
 @keyframes float {
   0%, 100% { 
     transform: translateY(0px); 
@@ -88,21 +103,86 @@
   }
 }
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
 
-/* Custom gradient backgrounds */
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.8s ease-out;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Gradientes responsivos ao modo escuro */
 .gradient-bg {
   background: linear-gradient(135deg, #1976D2 0%, #0D47A1 100%);
 }
 
-/* Custom hover effects */
+.dark .gradient-bg {
+  background: linear-gradient(135deg, #2563EB 0%, #1E40AF 100%);
+}
+
+/* Efeitos de hover aprimorados */
 .card-hover {
-  transition: all 0.3s ease;
+  @apply transition-all duration-300 ease-out;
 }
 
 .card-hover:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  @apply -translate-y-2 shadow-xl dark:shadow-2xl;
+}
+
+/* Botões com feedback visual */
+.btn-interactive {
+  @apply transition-all duration-200 ease-in-out transform active:scale-95;
+}
+
+.btn-interactive:hover:not(:disabled) {
+  @apply scale-105 shadow-lg;
+}
+
+/* Estados de loading */
+.skeleton {
+  @apply animate-pulse bg-muted rounded;
+}
+
+/* Melhor contraste para modo escuro */
+.dark .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
 }

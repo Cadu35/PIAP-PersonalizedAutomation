@@ -1,12 +1,20 @@
-import { useState } from "react";
-import { Menu, X, User } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Menu, X, User, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "next-themes";
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { user, isAuthenticated } = useAuth();
+  const { theme, setTheme } = useTheme();
+
+  // Evita hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -21,37 +29,55 @@ export default function Navigation() {
   };
 
   return (
-    <nav className="bg-white shadow-lg fixed w-full top-0 z-50">
+    <nav className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-lg dark:shadow-xl fixed w-full top-0 z-50 border-b border-border transition-colors duration-300" role="navigation" aria-label="Navegação principal">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <Link href="/">
-                <h1 className="text-2xl font-bold text-primary cursor-pointer">PIAP</h1>
+              <Link href="/" aria-label="Ir para página inicial">
+                <h1 className="text-2xl font-bold text-primary cursor-pointer hover:scale-105 transition-transform duration-200">
+                  PIAP
+                </h1>
               </Link>
             </div>
           </div>
           
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
+            <div className="ml-10 flex items-center space-x-6">
               <button 
                 onClick={() => scrollToSection('inicio')}
-                className="text-neutral-900 hover:text-primary px-3 py-2 text-sm font-medium transition-colors"
+                className="text-foreground hover:text-primary px-3 py-2 text-sm font-medium transition-all duration-200 btn-interactive"
+                aria-label="Ir para seção início"
               >
                 Início
               </button>
               <button 
                 onClick={() => scrollToSection('sobre')}
-                className="text-neutral-600 hover:text-primary px-3 py-2 text-sm font-medium transition-colors"
+                className="text-muted-foreground hover:text-primary px-3 py-2 text-sm font-medium transition-all duration-200 btn-interactive"
+                aria-label="Ir para seção sobre"
               >
                 Sobre
               </button>
               <button 
                 onClick={() => scrollToSection('funcionamento')}
-                className="text-neutral-600 hover:text-primary px-3 py-2 text-sm font-medium transition-colors"
+                className="text-muted-foreground hover:text-primary px-3 py-2 text-sm font-medium transition-all duration-200 btn-interactive"
+                aria-label="Ir para seção como funciona"
               >
                 Como Funciona
               </button>
+              
+              {/* Theme Toggle */}
+              {mounted && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  className="btn-interactive"
+                  aria-label={`Alternar para modo ${theme === "dark" ? "claro" : "escuro"}`}
+                >
+                  {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                </Button>
+              )}
               
               {isAuthenticated ? (
                 <div className="flex items-center space-x-4">
