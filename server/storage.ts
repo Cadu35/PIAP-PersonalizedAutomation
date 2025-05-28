@@ -1,64 +1,78 @@
-import { users, projectRequests, type User, type InsertUser, type ProjectRequest, type InsertProjectRequest } from "@shared/schema";
+import { users, projectRequests, type User, type InsertUser, type ProjectRequest, type InsertProjectRequest, type LoginData } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
+import bcrypt from "bcrypt";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  authenticateUser(credentials: LoginData): Promise<User | null>;
   createProjectRequest(request: InsertProjectRequest): Promise<ProjectRequest>;
   getProjectRequests(): Promise<ProjectRequest[]>;
   getProjectRequest(id: number): Promise<ProjectRequest | undefined>;
+  getCriadoresByEspecialidade(especialidade: string): Promise<User[]>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private projectRequests: Map<number, ProjectRequest>;
-  private currentUserId: number;
-  private currentProjectRequestId: number;
-
-  constructor() {
-    this.users = new Map();
-    this.projectRequests = new Map();
-    this.currentUserId = 1;
-    this.currentProjectRequestId = 1;
-  }
-
+export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user || undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+    const hashedPassword = await bcrypt.hash(insertUser.password, 10);
+    const [user] = await db
+      .insert(users)
+      .values({
+        ...insertUser,
+        password: hashedPassword,
+      })
+      .returning();
+    return user;
+  }
+
+  async authenticateUser(credentials: LoginData): Promise<User | null> {
+    const user = await this.getUserByEmail(credentials.email);
+    if (!user) return null;
+
+    const isValidPassword = await bcrypt.compare(credentials.password, user.password);
+    if (!isValidPassword) return null;
+
     return user;
   }
 
   async createProjectRequest(insertRequest: InsertProjectRequest): Promise<ProjectRequest> {
-    const id = this.currentProjectRequestId++;
-    const request: ProjectRequest = {
-      ...insertRequest,
-      id,
-      createdAt: new Date().toISOString(),
-    };
-    this.projectRequests.set(id, request);
+    const [request] = await db
+      .insert(projectRequests)
+      .values({
+        ...insertRequest,
+        createdAt: new Date().toISOString(),
+      })
+      .returning();
     return request;
   }
 
   async getProjectRequests(): Promise<ProjectRequest[]> {
-    return Array.from(this.projectRequests.values()).sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+    return await db.select().from(projectRequests);
   }
 
   async getProjectRequest(id: number): Promise<ProjectRequest | undefined> {
-    return this.projectRequests.get(id);
+    const [request] = await db.select().from(projectRequests).where(eq(projectRequests.id, id));
+    return request || undefined;
+  }
+
+  async getCriadoresByEspecialidade(especialidade: string): Promise<User[]> {
+    return await db
+      .select()
+      .from(users)
+      .where(eq(users.tipo, "criador"));
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
