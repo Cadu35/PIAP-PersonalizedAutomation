@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated } = useAuth();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -23,7 +26,9 @@ export default function Navigation() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <h1 className="text-2xl font-bold text-primary">PIAP</h1>
+              <Link href="/">
+                <h1 className="text-2xl font-bold text-primary cursor-pointer">PIAP</h1>
+              </Link>
             </div>
           </div>
           
@@ -47,12 +52,32 @@ export default function Navigation() {
               >
                 Como Funciona
               </button>
-              <Button 
-                onClick={() => scrollToSection('solicitar')}
-                className="bg-orange-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-orange-600 transition-colors"
-              >
-                Solicitar Projeto
-              </Button>
+              
+              {isAuthenticated ? (
+                <div className="flex items-center space-x-4">
+                  <Link href="/dashboard">
+                    <Button variant="outline" className="px-4 py-2">
+                      <User className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-4">
+                  <Button 
+                    onClick={() => scrollToSection('solicitar')}
+                    className="bg-orange-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-orange-600 transition-colors"
+                  >
+                    Solicitar Projeto
+                  </Button>
+                  <Link href="/login">
+                    <Button variant="outline" className="px-4 py-2">
+                      <User className="mr-2 h-4 w-4" />
+                      Entrar
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
           
