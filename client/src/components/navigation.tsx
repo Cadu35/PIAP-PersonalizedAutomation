@@ -82,8 +82,8 @@ export default function Navigation() {
               {isAuthenticated ? (
                 <div className="flex items-center space-x-4">
                   <Link href="/dashboard">
-                    <Button variant="outline" className="px-4 py-2">
-                      <User className="mr-2 h-4 w-4" />
+                    <Button variant="outline" className="btn-interactive" aria-label="Ir para dashboard">
+                      <User className="mr-2 h-4 w-4" aria-hidden="true" />
                       Dashboard
                     </Button>
                   </Link>
@@ -92,13 +92,14 @@ export default function Navigation() {
                 <div className="flex items-center space-x-4">
                   <Button 
                     onClick={() => scrollToSection('solicitar')}
-                    className="bg-orange-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-orange-600 transition-colors"
+                    className="bg-orange-500 hover:bg-orange-600 text-white font-medium btn-interactive"
+                    aria-label="Ir para seção solicitar projeto"
                   >
                     Solicitar Projeto
                   </Button>
                   <Link href="/login">
-                    <Button variant="outline" className="px-4 py-2">
-                      <User className="mr-2 h-4 w-4" />
+                    <Button variant="outline" className="btn-interactive" aria-label="Fazer login">
+                      <User className="mr-2 h-4 w-4" aria-hidden="true" />
                       Entrar
                     </Button>
                   </Link>
@@ -112,9 +113,15 @@ export default function Navigation() {
               variant="ghost"
               size="sm"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-neutral-600 hover:text-primary"
+              className="text-muted-foreground hover:text-primary btn-interactive"
+              aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
             >
-              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMobileMenuOpen ? 
+                <X className="h-6 w-6" aria-hidden="true" /> : 
+                <Menu className="h-6 w-6" aria-hidden="true" />
+              }
             </Button>
           </div>
         </div>
@@ -122,32 +129,82 @@ export default function Navigation() {
       
       {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white border-t">
+        <div 
+          id="mobile-menu"
+          className="md:hidden bg-background border-t border-border animate-fade-in-up"
+          role="menu"
+          aria-label="Menu de navegação mobile"
+        >
           <div className="px-2 pt-2 pb-3 space-y-1">
             <button 
               onClick={() => scrollToSection('inicio')}
-              className="block w-full text-left px-3 py-2 text-neutral-900 hover:text-primary"
+              className="block w-full text-left px-3 py-2 text-foreground hover:text-primary hover:bg-muted/50 rounded-md transition-all duration-200"
+              role="menuitem"
+              aria-label="Ir para seção início"
             >
               Início
             </button>
             <button 
               onClick={() => scrollToSection('sobre')}
-              className="block w-full text-left px-3 py-2 text-neutral-600 hover:text-primary"
+              className="block w-full text-left px-3 py-2 text-muted-foreground hover:text-primary hover:bg-muted/50 rounded-md transition-all duration-200"
+              role="menuitem"
+              aria-label="Ir para seção sobre"
             >
               Sobre
             </button>
             <button 
               onClick={() => scrollToSection('funcionamento')}
-              className="block w-full text-left px-3 py-2 text-neutral-600 hover:text-primary"
+              className="block w-full text-left px-3 py-2 text-muted-foreground hover:text-primary hover:bg-muted/50 rounded-md transition-all duration-200"
+              role="menuitem"
+              aria-label="Ir para seção como funciona"
             >
               Como Funciona
             </button>
-            <Button 
-              onClick={() => scrollToSection('solicitar')}
-              className="w-full bg-orange-500 text-white rounded-lg text-center mx-3 mt-4"
-            >
-              Solicitar Projeto
-            </Button>
+            
+            {/* Theme Toggle Mobile */}
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="block w-full text-left px-3 py-2 text-muted-foreground hover:text-primary hover:bg-muted/50 rounded-md transition-all duration-200"
+                role="menuitem"
+                aria-label={`Alternar para modo ${theme === "dark" ? "claro" : "escuro"}`}
+              >
+                <span className="flex items-center">
+                  {theme === "dark" ? 
+                    <Sun className="h-4 w-4 mr-2" aria-hidden="true" /> : 
+                    <Moon className="h-4 w-4 mr-2" aria-hidden="true" />
+                  }
+                  {theme === "dark" ? "Modo Claro" : "Modo Escuro"}
+                </span>
+              </button>
+            )}
+            
+            <div className="pt-2 space-y-2">
+              {isAuthenticated ? (
+                <Link href="/dashboard">
+                  <Button variant="outline" className="w-full btn-interactive" aria-label="Ir para dashboard">
+                    <User className="mr-2 h-4 w-4" aria-hidden="true" />
+                    Dashboard
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Button 
+                    onClick={() => scrollToSection('solicitar')}
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium btn-interactive"
+                    aria-label="Ir para seção solicitar projeto"
+                  >
+                    Solicitar Projeto
+                  </Button>
+                  <Link href="/login">
+                    <Button variant="outline" className="w-full btn-interactive" aria-label="Fazer login">
+                      <User className="mr-2 h-4 w-4" aria-hidden="true" />
+                      Entrar
+                    </Button>
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
         </div>
       )}
