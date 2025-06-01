@@ -1,6 +1,27 @@
 # PIAP - Personalized Automation
 
-A **PIAP** (Plataforma de Intermediação para Automação Personalizada) é uma aplicação voltada para conectar **clientes** com **desenvolvedores de projetos de automação eletrônica personalizada**, incluindo automação residencial, circuitos com Arduino, e impressão 3D.
+A **PIAP** (Plataforma de Intermediação para Automação Personalizada) é uma plataforma digital que conecta **clientes** que desejam soluções eletrônicas personalizadas com **desenvolvedores e designers especializados** em automação, Arduino, circuitos e impressão 3D.
+
+A ideia surgiu para **facilitar o acesso a projetos personalizados**, permitindo que qualquer pessoa, mesmo sem conhecimento técnico, possa explicar sua necessidade e ser atendida por especialistas em desenvolvimento eletrônico e design de produtos personalizados.
+
+---
+
+## 🧠 Objetivo do Projeto
+
+Oferecer um ambiente intuitivo onde:
+
+- Pessoas comuns possam **enviar suas ideias de automação** ou necessidades específicas.
+- Desenvolvedores e designers possam **visualizar e aceitar projetos** conforme sua especialidade.
+- Haja uma **comunicação direta e eficiente** entre cliente e especialista para discutir detalhes do projeto.
+- O processo seja **seguro, rápido e acessível**, promovendo inovação mesmo em pequena escala.
+
+---
+
+## 👤 Quem pode usar?
+
+- **Clientes**: Pessoas físicas ou empresas com uma ideia, necessidade ou problema que possa ser resolvido com automação, Arduino, sensores, módulos eletrônicos ou impressão 3D.
+- **Desenvolvedores**: Técnicos ou engenheiros com experiência em eletrônica, Arduino, ESP, Raspberry Pi, etc.
+- **Designers 3D**: Profissionais especializados em modelagem e impressão 3D de peças personalizadas.
 
 ---
 
@@ -89,7 +110,9 @@ Editar
 
 ---
 
-Se quiser, posso personalizar com o link do seu WhatsApp, LinkedIn, e outros dados. Deseja isso?
+Se quiser, posso substituir os links de contato por links reais (se você me passar seu número e/ou perfil do LinkedIn), e também ajustar a descrição se quiser focar mais em Arduino, automação residencial ou outro foco específico. Deseja isso?
+
+
 
 
 
