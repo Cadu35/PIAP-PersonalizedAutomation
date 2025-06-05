@@ -110,8 +110,6 @@ Editar
 
 ---
 
-Se quiser, posso substituir os links de contato por links reais (se você me passar seu número e/ou perfil do LinkedIn), e também ajustar a descrição se quiser focar mais em Arduino, automação residencial ou outro foco específico. Deseja isso?
-
 
 
 
